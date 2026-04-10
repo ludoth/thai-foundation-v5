@@ -535,7 +535,7 @@
       </div>
       <div class="sw-side right" id="sw-right">
         <div class="sw-icon">✓</div>
-        <div class="sw-lbl">Got it</div>
+        <div class="sw-lbl">Ok</div>
       </div>
 
       <div class="card-wrap" id="card-wrap">
@@ -564,7 +564,7 @@
         <div class="sh-sep"></div>
         <span class="sh">swipe or tap</span>
         <div class="sh-sep"></div>
-        <span class="sh sh-r">Got it →</span>
+        <span class="sh sh-r">Ok →</span>
       </div>
       <button class="btn-show" id="btn-show" onclick="revealCard()">Show answer</button>
       <div class="rate-row" id="rate-row">
@@ -1091,25 +1091,11 @@ function onEnd(e) {
   const THRESHOLD = 82;
 
   if (dx > THRESHOLD) {
-    // Swipe right → fast "Got it" without reveal
-    inner.style.transition = 'transform 0.2s ease-in, opacity 0.2s';
-    inner.style.transform  = 'translateX(160%) rotate(10deg)';
-    inner.style.opacity    = '0';
-    const { i, w } = queue[cardIdx];
-    const d = getCard(i);
-    const prev = d.heat;
-    d.seen = true; d.heat = Math.min(d.heat + 1, HEAT_MAX); d.hits++;
-    if (!prev) sessionStats.newLearned++;
-    sessionStats.got++;
-    setCard(i, d); saveSRS();
-    if (d.heat >= HEAT_MAX && prev < HEAT_MAX) showMastered(w, d);
-    setTimeout(() => {
-      inner.style.transition = 'none';
-      inner.style.transform  = '';
-      inner.style.opacity    = '';
-      cardIdx++;
-      renderCard();
-    }, 240);
+    // Swipe right → Ok (almost)
+    inner.style.transition = '';
+    inner.style.transform  = '';
+    revealed = true;
+    rateCard('almost');
 
   } else if (dx < -THRESHOLD) {
     // Swipe left → Nope
