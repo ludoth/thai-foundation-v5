@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Thai Words</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:          #0b0d14;
+      --surface:     #12151f;
+      --surface-up:  #1c2030;
+      --border:      #252a3a;
+      --text:        #eceae6;
+      --text-mid:    #7a859a;
+      --text-dim:    #35404f;
+      --rose:        #e1203f;
+      --rose-hi:     #f23050;
+      --rose-glow:   rgba(225,32,63,0.16);
+      --teal:        #0f9580;
+      --teal-soft:   rgba(15,149,128,0.12);
+      --blue-soft:   rgba(59,126,248,0.10);
+      --streak:      #f97316;
+      --card:        #fefcf8;
+      --card-text:   #140d08;
+      --card-muted:  #9a8878;
+      --card-dim:    #c9bbb0;
+      --card-border: #ede5dc;
+      --r-card: 22px;
+      --r-btn:  16px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    html, body {
+      width: 100%; height: 100%;
+      font-family: 'Sarabun', sans-serif;
+      background: var(--bg); color: var(--text);
+      overflow: hidden; position: fixed;
+    }
+    body::before {
+      content: ''; position: fixed; inset: 0;
+      pointer-events: none; z-index: 9999; opacity: 0.02;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+      background-size: 160px;
+    }
+    #app {
+      width: 100%; height: 100%;
+      max-width: 430px; margin: 0 auto;
+      position: relative; overflow: hidden;
+    }
+
+    /* ── Screens ─────────────────────────────── */
+    .screen {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      background: var(--bg);
+    }
+    .screen[hidden] { display: none; }
+
+    /* ── HOME ────────────────────────────────── */
+    #screen-home {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 20%, rgba(225,32,63,0.07) 0%, transparent 60%),
+        var(--bg);
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .home-header {
+      padding: 52px 24px 0;
+      display: flex; align-items: flex-end; justify-content: space-between;
+      animation: fade-up 0.4s ease both;
+    }
+    .home-eyebrow {
+      font-size: 0.55rem; text-transform: uppercase;
+      letter-spacing: 0.22em; font-weight: 700;
+      color: var(--text-dim); margin-bottom: 4px;
+    }
+    .title-row { display: flex; align-items: center; gap: 8px; }
+    .title-th  { font-size: 2rem; font-weight: 800; color: var(--text); letter-spacing: -0.025em; line-height: 1; }
+    .mode-switcher {
+      display: flex; align-items: center;
+      background: var(--surface-up); border: 1px solid var(--border);
+      border-radius: 22px; padding: 4px;
+      cursor: pointer; position: relative; transition: border-color 0.2s;
+    }
+    .mode-switcher:hover { border-color: #303648; }
+    .mode-opt {
+      font-size: 0.63rem; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 11px 13px; border-radius: 18px; line-height: 1;
+      color: var(--text-dim); transition: color 0.25s;
+      position: relative; z-index: 1; white-space: nowrap; user-select: none;
+    }
+    .mode-opt.active { color: #fff; }
+    .mode-pill {
+      position: absolute; top: 4px; bottom: 4px; border-radius: 18px;
+      background: var(--rose);
+      transition: left 0.3s cubic-bezier(0.34,1.2,0.64,1), width 0.3s cubic-bezier(0.34,1.2,0.64,1);
+      box-shadow: 0 2px 12px rgba(225,32,63,0.45);
+    }
+    .streak-badge {
+      display: flex; align-items: center; gap: 6px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 8px 14px 8px 10px;
+      animation: fade-up 0.4s 0.05s ease both;
+    }
+    .streak-fire { font-size: 1.3rem; line-height: 1; }
+    .streak-info { display: flex; flex-direction: column; }
+    .streak-n    { font-size: 1.1rem; font-weight: 800; color: var(--streak); line-height: 1; }
+    .streak-lbl  { font-size: 0.42rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-dim); font-weight: 700; margin-top: 1px; }
+
+    /* Ring */
+    .ring-section {
+      flex: 0 0 auto; display: flex; flex-direction: column;
+      align-items: center; padding: 20px 24px 14px;
+      animation: fade-up 0.4s 0.1s ease both;
+    }
+    .ring-outer {
+      position: relative; display: flex; align-items: center; justify-content: center;
+      width: 180px; height: 180px;
+    }
+    .ring-glow-outer {
+      position: absolute; width: 180px; height: 180px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(225,32,63,0.14) 0%, transparent 70%);
+      filter: blur(20px); transform: scale(1.3); pointer-events: none;
+    }
+    .ring-glow-inner {
+      position: absolute; width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(225,32,63,0.08); filter: blur(16px); pointer-events: none;
+    }
+    .ring-svg { transform: rotate(-90deg); position: relative; z-index: 1; }
+    .ring-track { fill: none; stroke: var(--surface-up); stroke-width: 12; }
+    .ring-seen-arc {
+      fill: none; stroke: rgba(225,32,63,0.2); stroke-width: 12;
+      stroke-linecap: butt; stroke-dasharray: 471; stroke-dashoffset: 471;
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1), stroke-dasharray 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .ring-arc {
+      fill: none; stroke: var(--rose); stroke-width: 12;
+      stroke-linecap: round; stroke-dasharray: 471; stroke-dashoffset: 471;
+      filter: drop-shadow(0 0 6px rgba(225,32,63,0.5));
+      transition: stroke-dashoffset 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .ring-center {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; z-index: 2; pointer-events: none;
+    }
+    .ring-n        { font-size: 3rem; font-weight: 800; color: var(--text); line-height: 1; letter-spacing: -0.04em; }
+    .ring-label-wrap { display: flex; flex-direction: column; align-items: center; margin-top: 3px; gap: 1px; }
+    .ring-of       { font-size: 0.63rem; color: var(--text-mid); font-weight: 600; line-height: 1.2; }
+    .ring-badge    { font-size: 0.42rem; text-transform: uppercase; letter-spacing: 0.18em; color: var(--rose); font-weight: 800; background: rgba(225,32,63,0.1); border: 1px solid rgba(225,32,63,0.2); border-radius: 4px; padding: 2px 6px; margin-top: 4px; }
+    .ring-flanks   { display: flex; width: 100%; justify-content: space-between; padding: 0 8px; margin-top: 14px; }
+    .flank         { text-align: center; flex: 1; }
+    .flank-n       { font-size: 1.4rem; font-weight: 800; color: var(--text); line-height: 1; }
+    .flank-l       { font-size: 0.46rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); font-weight: 700; margin-top: 2px; }
+    .ring-divider  { width: 1px; background: var(--border); align-self: stretch; margin: 4px 0; }
+
+    /* Today panel (merged goal + level) */
+    .today-panel {
+      margin: 0 20px 14px;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; overflow: hidden;
+      animation: fade-up 0.4s 0.15s ease both;
+    }
+    .today-top-row { padding: 14px 18px 12px; display: flex; align-items: center; justify-content: space-between; }
+    .today-eye  { font-size: 0.47rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--text-dim); font-weight: 700; margin-bottom: 3px; }
+    .today-name { font-size: 0.92rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 6px; }
+    .lvl-chip   { font-size: 0.5rem; font-weight: 800; letter-spacing: 0.06em; background: var(--surface-up); border: 1px solid var(--border); border-radius: 8px; padding: 3px 8px; color: var(--text-mid); }
+    .today-right { text-align: right; }
+    .today-ct-big { font-size: 1.6rem; font-weight: 800; color: var(--rose); line-height: 1; letter-spacing: -0.03em; }
+    .today-ct-lbl { font-size: 0.46rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-weight: 700; margin-top: 1px; }
+    .goal-track { height: 5px; background: var(--bg); }
+    .goal-fill  { height: 100%; background: linear-gradient(90deg, var(--rose), var(--rose-hi)); border-radius: 0 3px 3px 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 8px rgba(225,32,63,0.35); }
+
+    /* CTA */
+    .home-cta { margin: 0 20px; animation: fade-up 0.4s 0.2s ease both; }
+    .btn-cta {
+      width: 100%; padding: 17px 20px;
+      background: var(--rose); color: #fff;
+      border: none; border-radius: 18px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      cursor: pointer; letter-spacing: 0.01em;
+      display: flex; align-items: center; justify-content: space-between;
+      transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+      box-shadow: 0 6px 24px rgba(225,32,63,0.32), 0 2px 8px rgba(225,32,63,0.2);
+      position: relative; overflow: hidden;
+    }
+    .btn-cta::after { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.06) 0%, transparent 60%); pointer-events: none; }
+    .btn-cta:hover { background: var(--rose-hi); }
+    .btn-cta:active { transform: scale(0.98); box-shadow: 0 3px 12px rgba(225,32,63,0.28); }
+    .cta-left  { display: flex; flex-direction: column; gap: 1px; }
+    .cta-main  { font-size: 1rem; font-weight: 800; }
+    .cta-sub   { font-size: 0.58rem; font-weight: 600; opacity: 0.72; letter-spacing: 0.02em; }
+    .cta-arrow { width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.18); display: flex; align-items: center; justify-content: center; transition: transform 0.2s cubic-bezier(0.34,1.2,0.64,1); }
+    .btn-cta:active .cta-arrow { transform: translateX(3px); }
+
+    /* ── STUDY ───────────────────────────────── */
+    #screen-study {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(225,32,63,0.04) 0%, transparent 55%),
+        var(--bg);
+    }
+    .study-nav {
+      padding: 50px 18px 0;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .btn-back {
+      display: flex; align-items: center; gap: 5px;
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.76rem; font-weight: 700; color: var(--text-mid);
+      background: none; border: none; cursor: pointer;
+      padding: 6px 10px; border-radius: 10px; white-space: nowrap;
+      transition: color 0.15s;
+    }
+    .btn-back:hover { color: var(--text); }
+    .sess-bar-wrap { flex: 1; height: 4px; background: var(--surface-up); border-radius: 99px; overflow: hidden; }
+    .sess-bar-fill { height: 100%; background: var(--rose); border-radius: 99px; transition: width 0.4s ease; }
+    .sess-counter  { font-size: 0.64rem; font-weight: 800; color: var(--text-mid); white-space: nowrap; }
+
+    /* Card stage */
+    .card-stage {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 14px 20px; position: relative;
+      touch-action: none;
+    }
+    .sw-side {
+      position: absolute; top: 50%; transform: translateY(-50%);
+      opacity: 0; pointer-events: none; z-index: 20;
+      display: flex; flex-direction: column; align-items: center; gap: 5px;
+      transition: opacity 0.08s;
+    }
+    .sw-side.left  { left: 2px; }
+    .sw-side.right { right: 2px; }
+    .sw-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1rem; }
+    .sw-side.left  .sw-icon { background: rgba(220,38,38,0.15); color: #ef4444; }
+    .sw-side.right .sw-icon { background: rgba(15,149,128,0.15); color: var(--teal); }
+    .sw-lbl { font-size: 0.52rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; }
+    .sw-side.left  .sw-lbl { color: #ef4444; }
+    .sw-side.right .sw-lbl { color: var(--teal); }
+
+    /* Card */
+    .card-wrap { width: 100%; max-width: 360px; perspective: 1000px; }
+    .card-inner {
+      width: 100%; transform-style: preserve-3d;
+      transition: transform 0.48s cubic-bezier(0.34,1,0.64,1);
+      will-change: transform; position: relative;
+    }
+    .card-inner.flipped { transform: rotateY(180deg); }
+    .card-inner.no-anim { transition: none !important; }
+    .card-f, .card-b {
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+      border-radius: var(--r-card);
+      background: var(--card);
+      border: 1px solid rgba(0,0,0,0.04);
+      box-shadow:
+        0 2px 6px rgba(0,0,0,0.12),
+        0 10px 32px rgba(0,0,0,0.28),
+        0 28px 64px rgba(0,0,0,0.16);
+      padding: 24px 22px 20px;
+      min-height: 224px;
+      max-height: 360px;
+      display: flex; flex-direction: column;
+    }
+    .card-b {
+      position: absolute; top: 0; left: 0; right: 0;
+      transform: rotateY(180deg);
+    }
+
+    /* Card front */
+    .card-top-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .card-cat {
+      font-size: 0.53rem; text-transform: uppercase;
+      letter-spacing: 0.16em; font-weight: 800; color: var(--card-muted);
+    }
+    .new-pill {
+      font-size: 0.46rem; font-weight: 800;
+      background: var(--rose); color: #fff;
+      border-radius: 5px; padding: 2px 6px;
+      text-transform: uppercase; letter-spacing: 0.06em;
+    }
+    .card-en {
+      font-size: clamp(2rem, 8vw, 3.1rem);
+      font-weight: 800; color: var(--card-text);
+      line-height: 1.08; flex: 1;
+      display: flex; align-items: center;
+      letter-spacing: -0.015em;
+      word-break: break-word;
+    }
+    .card-en.long { font-size: clamp(1.1rem, 4.5vw, 1.6rem); line-height: 1.3; letter-spacing: -0.005em; }
+    .heat-row { display: flex; align-items: center; gap: 5px; padding-top: 12px; }
+    .h-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--card-border); transition: background 0.3s; }
+    .h-dot.on { background: var(--rose); }
+    .h-text { font-size: 0.52rem; font-weight: 700; color: var(--card-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 5px; }
+
+    /* Card back */
+    .back-en-lbl { font-size: 0.78rem; font-weight: 700; color: var(--card-muted); margin-bottom: 9px; }
+    .back-div    { height: 1px; background: var(--card-border); margin-bottom: 12px; }
+    .card-th {
+      font-size: clamp(2.2rem, 9vw, 3.6rem);
+      font-weight: 800; color: var(--rose);
+      line-height: 1.08; flex: 1;
+      display: flex; align-items: center;
+      letter-spacing: -0.015em;
+      word-break: break-word;
+    }
+    .card-th.long { font-size: clamp(1rem, 4.2vw, 1.5rem); line-height: 1.35; letter-spacing: 0em; }
+    @keyframes word-pop {
+      0%   { opacity: 0; transform: scale(0.85) translateY(7px); }
+      65%  { transform: scale(1.05) translateY(-2px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .card-inner.flipped .card-th { animation: word-pop 0.42s cubic-bezier(0.34,1.4,0.64,1) 0.28s both; }
+    .card-note {
+      font-size: 0.68rem; color: var(--card-muted);
+      font-style: italic; line-height: 1.6;
+      padding-top: 10px; border-top: 1px solid var(--card-border); margin-top: 8px;
+    }
+
+    /* Controls */
+    .study-controls {
+      padding: 10px 20px;
+      padding-bottom: max(40px, env(safe-area-inset-bottom, 40px));
+    }
+    .swipe-hint {
+      text-align: center; margin-bottom: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 7px;
+    }
+    .sh { font-size: 0.56rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+    .sh-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-dim); }
+    .sh-l { color: rgba(239,68,68,0.4); }
+    .sh-r { color: rgba(15,149,128,0.4); }
+
+    .btn-show {
+      width: 100%; padding: 17px;
+      background: var(--rose); color: #fff;
+      border: none; border-radius: var(--r-btn);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 0.95rem; font-weight: 800; letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      box-shadow: 0 6px 22px rgba(225,32,63,0.24);
+    }
+    .btn-show:hover { background: var(--rose-hi); }
+    .btn-show:active { transform: scale(0.98); }
+
+    .rate-row { display: none; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .rate-row.on { display: grid; }
+    .btn-rate {
+      padding: 13px 6px; border: none; border-radius: 14px;
+      cursor: pointer; font-family: 'Sarabun', sans-serif;
+      font-size: 0.74rem; font-weight: 800;
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      transition: transform 0.1s;
+    }
+    .btn-rate:active { transform: scale(0.94); }
+    .btn-rate .icon { font-size: 1rem; }
+    .r-nope   { background: #fef2f2; color: #dc2626; }
+    .r-almost { background: #eff6ff; color: #2563eb; }
+    .r-got    { background: #f0fdf4; color: #16a34a; }
+
+    /* ── DONE ────────────────────────────────── */
+    #screen-done {
+      background:
+        radial-gradient(ellipse 90% 60% at 50% 35%, rgba(225,32,63,0.07) 0%, transparent 65%),
+        var(--bg);
+      align-items: center; justify-content: center;
+      padding: 40px 28px;
+      text-align: center;
+    }
+    .done-emoji { font-size: 3.2rem; display: block; margin-bottom: 16px; animation: word-pop 0.5s cubic-bezier(0.34,1.4,0.64,1) both; }
+    .done-title { font-size: 1.9rem; font-weight: 800; color: var(--text); letter-spacing: -0.02em; margin-bottom: 8px; }
+    .done-sub   { font-size: 0.85rem; color: var(--text-mid); margin-bottom: 32px; line-height: 1.65; }
+    .done-grid  {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; width: 100%; margin-bottom: 24px;
+    }
+    .done-stat {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 16px; padding: 16px 10px; text-align: center;
+    }
+    .done-n { font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; display: block; }
+    .done-l { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-weight: 700; display: block; margin-top: 4px; }
+    .done-got-n   { color: #16a34a; }
+    .done-nope-n  { color: #dc2626; }
+    .btn-done {
+      width: 100%; padding: 18px;
+      background: var(--rose); color: #fff;
+      border: none; border-radius: var(--r-btn);
+      font-family: 'Sarabun', sans-serif;
+      font-size: 1rem; font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 6px 22px rgba(225,32,63,0.26);
+      transition: transform 0.1s;
+    }
+    .btn-done:active { transform: scale(0.98); }
+
+    /* ── MASTERED OVERLAY ────────────────────── */
+    #mastered-ov {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      pointer-events: none; z-index: 50;
+    }
+    .m-card {
+      background: var(--card);
+      border-radius: 24px; padding: 26px 30px;
+      text-align: center;
+      box-shadow: 0 8px 48px rgba(0,0,0,0.55), 0 0 0 2px var(--rose);
+      transform: translateY(24px) scale(0.88); opacity: 0;
+      transition: transform 0.42s cubic-bezier(0.34,1.4,0.64,1), opacity 0.3s;
+    }
+    #mastered-ov.show .m-card { transform: translateY(0) scale(1); opacity: 1; }
+    .m-star  { font-size: 2rem; display: block; margin-bottom: 6px; }
+    .m-title { font-size: 0.54rem; text-transform: uppercase; letter-spacing: 0.16em; color: var(--rose); font-weight: 800; display: block; }
+    .m-word  { font-size: 1.9rem; font-weight: 800; color: var(--card-text); display: block; margin-top: 5px; line-height: 1.1; }
+    .m-en    { font-size: 0.8rem; color: var(--card-muted); display: block; margin-top: 3px; }
+    .m-count { font-size: 0.66rem; font-weight: 800; color: var(--rose); margin-top: 8px; display: block; }
+
+    /* Particles */
+    .pfx {
+      position: fixed; border-radius: 50%;
+      pointer-events: none; z-index: 99;
+      animation: pfx-a var(--dur,0.8s) ease-out var(--del,0s) both;
+    }
+    @keyframes pfx-a {
+      0%   { opacity: 1; transform: translate(0,0) scale(1); }
+      100% { opacity: 0; transform: translate(var(--tx),var(--ty)) scale(0.1); }
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══ HOME ═══ -->
+  <div class="screen" id="screen-home">
+    <div class="home-header">
+      <div class="header-left">
+        <div class="home-eyebrow">Learn Thai</div>
+        <div class="title-row">
+          <span class="title-th">สวัสดี</span>
+          <div class="mode-switcher" id="mode-switcher" onclick="toggleMode()">
+            <div class="mode-pill" id="mode-pill"></div>
+            <span class="mode-opt active" id="opt-words">Words</span>
+            <span class="mode-opt" id="opt-sentences">Sentences</span>
+          </div>
+        </div>
+      </div>
+      <div class="streak-badge">
+        <div class="streak-fire">🔥</div>
+        <div class="streak-info">
+          <div class="streak-n" id="h-streak">0</div>
+          <div class="streak-lbl">day streak</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ring-section">
+      <div class="ring-outer">
+        <div class="ring-glow-outer"></div>
+        <div class="ring-glow-inner"></div>
+        <svg class="ring-svg" width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-track"    cx="90" cy="90" r="75"/>
+          <circle class="ring-seen-arc" id="ring-seen" cx="90" cy="90" r="75"/>
+          <circle class="ring-arc"      id="ring-arc"  cx="90" cy="90" r="75"/>
+        </svg>
+        <div class="ring-center">
+          <span class="ring-n" id="ring-n">0</span>
+          <div class="ring-label-wrap">
+            <span class="ring-of" id="ring-of">of 0 words</span>
+            <span class="ring-badge">mastered</span>
+          </div>
+        </div>
+      </div>
+      <div class="ring-flanks">
+        <div class="flank"><div class="flank-n" id="h-seen">0</div><div class="flank-l">Seen</div></div>
+        <div class="ring-divider"></div>
+        <div class="flank"><div class="flank-n" id="h-accuracy">—</div><div class="flank-l">Accuracy</div></div>
+        <div class="ring-divider"></div>
+        <div class="flank"><div class="flank-n" id="h-sessions">0</div><div class="flank-l">Sessions</div></div>
+      </div>
+    </div>
+
+    <div class="today-panel">
+      <div class="today-top-row">
+        <div>
+          <div class="today-eye">Today's focus</div>
+          <div class="today-name"><span id="level-name-text">🙏 Greetings & Basics</span><span class="lvl-chip" id="level-pill">LVL 1</span></div>
+        </div>
+        <div class="today-right">
+          <div class="today-ct-big"><span id="goal-done">0</span>/<span id="goal-total">10</span></div>
+          <div class="today-ct-lbl">new <span id="goal-mode-label">words</span></div>
+        </div>
+      </div>
+      <div class="goal-track">
+        <div class="goal-fill" id="goal-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="home-cta">
+      <button class="btn-cta" id="btn-cta" onclick="startStudy()">
+        <div class="cta-left">
+          <span class="cta-main" id="cta-label">Start learning</span>
+          <span class="cta-sub" id="cta-sub">—</span>
+        </div>
+        <span class="cta-arrow">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══ STUDY ═══ -->
+  <div class="screen" id="screen-study" hidden>
+    <div class="study-nav">
+      <button class="btn-back" onclick="goHome()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+        Home
+      </button>
+      <div class="sess-bar-wrap">
+        <div class="sess-bar-fill" id="sess-bar" style="width:0%"></div>
+      </div>
+      <div class="sess-counter" id="sess-counter">1 / 12</div>
+    </div>
+
+    <div class="card-stage" id="card-stage">
+      <div class="sw-side left"  id="sw-left">
+        <div class="sw-icon">✕</div>
+        <div class="sw-lbl">Nope</div>
+      </div>
+      <div class="sw-side right" id="sw-right">
+        <div class="sw-icon">✓</div>
+        <div class="sw-lbl">Got it</div>
+      </div>
+
+      <div class="card-wrap" id="card-wrap">
+        <div class="card-inner" id="card-inner">
+          <div class="card-f">
+            <div class="card-top-row">
+              <span class="card-cat" id="card-cat">greetings</span>
+              <span class="new-pill" id="new-pill" style="display:none">NEW</span>
+            </div>
+            <div class="card-en" id="card-en">hello</div>
+            <div class="heat-row" id="heat-row"></div>
+          </div>
+          <div class="card-b">
+            <div class="back-en-lbl" id="back-en">hello</div>
+            <div class="back-div"></div>
+            <div class="card-th" id="card-th">sà-wàd-dee</div>
+            <div class="card-note" id="card-note" style="display:none"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="study-controls">
+      <div class="swipe-hint" id="swipe-hint">
+        <span class="sh sh-l">← Nope</span>
+        <div class="sh-sep"></div>
+        <span class="sh">swipe or tap</span>
+        <div class="sh-sep"></div>
+        <span class="sh sh-r">Got it →</span>
+      </div>
+      <button class="btn-show" id="btn-show" onclick="revealCard()">Show answer</button>
+      <div class="rate-row" id="rate-row">
+        <button class="btn-rate r-nope"   onclick="rateCard('nope')">  <span class="icon">✕</span>Nope</button>
+        <button class="btn-rate r-almost" onclick="rateCard('almost')"><span class="icon">~</span>Almost</button>
+        <button class="btn-rate r-got"    onclick="rateCard('got')">   <span class="icon">✓</span>Got it!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DONE ═══ -->
+  <div class="screen" id="screen-done" hidden>
+    <span class="done-emoji" id="done-emoji">🎉</span>
+    <div class="done-title" id="done-title">Session done!</div>
+    <div class="done-sub"   id="done-sub">You studied 12 cards. Keep it up!</div>
+    <div class="done-grid">
+      <div class="done-stat"><span class="done-n done-got-n"  id="done-got">0</span><span class="done-l">Got it</span></div>
+      <div class="done-stat"><span class="done-n"             id="done-alm">0</span><span class="done-l">Almost</span></div>
+      <div class="done-stat"><span class="done-n done-nope-n" id="done-nope">0</span><span class="done-l">Nope</span></div>
+    </div>
+    <button class="btn-done" onclick="goHome()">Back to home</button>
+  </div>
+
+  <!-- ═══ MASTERED ═══ -->
+  <div id="mastered-ov">
+    <div class="m-card">
+      <span class="m-star">⭐</span>
+      <span class="m-title">Word Mastered!</span>
+      <span class="m-word"  id="m-word">náam</span>
+      <span class="m-en"    id="m-en">water</span>
+      <span class="m-count" id="m-count">1 word mastered</span>
+    </div>
+  </div>
+
+</div>
+<script src="foundation.js"></script>
+<script>
+'use strict';
+
+// ── Constants ──────────────────────────────────────────
+const HEAT_MAX      = 5;
+const N_NEW         = 3;    // new cards per session
+const SESSION_SIZE  = 12;
+const GOAL_DAILY    = 10;   // daily new-word goal
+
+const LS_SRS        = 'v5_srs';
+const LS_SESSIONS   = 'v5_sessions';
+const LS_STREAK     = 'v5_streak';
+const LS_LAST_DATE  = 'v5_last_date';
+const LS_TODAY      = 'v5_today';
+const LS_MODE       = 'v5_mode';
+
+// ── Persistent state ──────────────────────────────────
+let srsData      = JSON.parse(localStorage.getItem(LS_SRS)      || '{}');
+let sessionCount = parseInt(localStorage.getItem(LS_SESSIONS)   || '0');
+let streak       = parseInt(localStorage.getItem(LS_STREAK)     || '0');
+
+// Per-card data
+function cardKey(i) { return 'c' + i; }
+function getCard(i) {
+  return srsData[cardKey(i)] || { heat: 0, seen: false, hits: 0, misses: 0 };
+}
+function setCard(i, d) { srsData[cardKey(i)] = d; }
+function saveSRS()     { localStorage.setItem(LS_SRS, JSON.stringify(srsData)); }
+
+// Today tracker
+function getTodayData() {
+  const today = new Date().toISOString().split('T')[0];
+  let t = JSON.parse(localStorage.getItem(LS_TODAY) || '{}');
+  if (t.date !== today) t = { date: today, newLearned: 0 };
+  return t;
+}
+function saveTodayData(d) { localStorage.setItem(LS_TODAY, JSON.stringify(d)); }
+
+// Streak update
+function updateStreak() {
+  const today = new Date().toISOString().split('T')[0];
+  const last  = localStorage.getItem(LS_LAST_DATE);
+  if (last === today) return;
+  const yesterday = new Date(Date.now() - 864e5).toISOString().split('T')[0];
+  streak = (last === yesterday) ? streak + 1 : 1;
+  localStorage.setItem(LS_STREAK,     streak);
+  localStorage.setItem(LS_LAST_DATE,  today);
+}
+
+// ── Vocab mode ────────────────────────────────────────
+let vocabMode = localStorage.getItem(LS_MODE) || 'words';
+
+function getVocabIndices() {
+  return FOUNDATION
+    .map((w, i) => ({ w, i }))
+    .filter(({ w }) => vocabMode === 'sentences' ? w.cat === 'sentences' : w.cat !== 'sentences')
+    .map(({ i }) => i);
+}
+
+function toggleMode() {
+  vocabMode = vocabMode === 'words' ? 'sentences' : 'words';
+  localStorage.setItem(LS_MODE, vocabMode);
+  updateModePill();
+  renderHome();
+}
+
+function updateModePill() {
+  const pill = $('mode-pill'), sw = $('mode-switcher');
+  const optW = $('opt-words'),  optS = $('opt-sentences');
+  if (!pill || !sw) return;
+  const isW = vocabMode === 'words';
+  optW.classList.toggle('active', isW);
+  optS.classList.toggle('active', !isW);
+  const r  = (isW ? optW : optS).getBoundingClientRect();
+  const pr = sw.getBoundingClientRect();
+  pill.style.left  = (r.left - pr.left - 4) + 'px';
+  pill.style.width = r.width + 'px';
+}
+
+// ── Derived stats ─────────────────────────────────────
+function countMastered()  {
+  return getVocabIndices().filter(i => getCard(i).heat >= HEAT_MAX).length;
+}
+function countSeen()      {
+  return getVocabIndices().filter(i => getCard(i).seen).length;
+}
+function accuracyStr() {
+  const idxs = getVocabIndices();
+  const h = idxs.reduce((s, i) => s + (getCard(i).hits   || 0), 0);
+  const m = idxs.reduce((s, i) => s + (getCard(i).misses || 0), 0);
+  return (h + m) === 0 ? '—' : Math.round(h / (h + m) * 100) + '%';
+}
+
+// ── Level system ──────────────────────────────────────
+const LEVELS = [
+  { min:   0, max:  40, emoji: '🙏', name: 'Greetings & Basics',   lvl: 1 },
+  { min:  40, max: 100, emoji: '🍜', name: 'Food & Daily Life',     lvl: 2 },
+  { min: 100, max: 180, emoji: '🗺️', name: 'Getting Around',        lvl: 3 },
+  { min: 180, max: 270, emoji: '💬', name: 'Conversational',        lvl: 4 },
+  { min: 270, max: 999, emoji: '🎯', name: 'Advanced',              lvl: 5 },
+];
+function getLevelInfo(mastered) {
+  return LEVELS.find(l => mastered >= l.min && mastered < l.max) || LEVELS[LEVELS.length - 1];
+}
+
+// ── Session state ─────────────────────────────────────
+let queue    = [];
+let cardIdx  = 0;
+let revealed = false;
+let sessionStats = { got: 0, almost: 0, nope: 0, newLearned: 0 };
+let drag     = null;
+
+// ── Helpers ───────────────────────────────────────────
+const $ = id => document.getElementById(id);
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ── Home screen ───────────────────────────────────────
+function renderHome() {
+  const isSentences = vocabMode === 'sentences';
+  const mastered = countMastered();
+  const seen     = countSeen();
+  const total    = getVocabIndices().length;
+  const lvl      = getLevelInfo(mastered);
+  const today    = getTodayData();
+  const goalN    = isSentences ? 3 : GOAL_DAILY;
+
+  // Ring — mastered (solid) + seen overlay (dim)
+  const CIRC = 2 * Math.PI * 75;
+  const mPct = total ? mastered / total : 0;
+  const sPct = total ? seen / total : 0;
+
+  $('ring-arc').style.strokeDashoffset = CIRC * (1 - mPct);
+
+  const mLen = CIRC * mPct;
+  const sLen = CIRC * (sPct - mPct);
+  if (sLen > 0) {
+    $('ring-seen').style.strokeDasharray  = sLen + ',' + CIRC;
+    $('ring-seen').style.strokeDashoffset = CIRC - mLen;
+  } else {
+    $('ring-seen').style.strokeDasharray  = '0,' + CIRC;
+  }
+
+  $('ring-n').textContent  = mastered;
+  $('ring-of').textContent = 'of ' + total + (isSentences ? ' sentences' : ' words');
+
+  // Stats
+  $('h-streak').textContent    = streak;
+  $('h-seen').textContent      = seen;
+  $('h-sessions').textContent  = sessionCount;
+  $('h-accuracy').textContent  = accuracyStr();
+
+  // Level / category label
+  if (isSentences) {
+    $('level-name-text').textContent = '📝 Practical Sentences';
+    $('level-pill').textContent      = total + ' total';
+  } else {
+    $('level-name-text').textContent = lvl.emoji + ' ' + lvl.name;
+    $('level-pill').textContent      = 'LVL ' + lvl.lvl;
+  }
+
+  // Today goal
+  const todayKey = 'newLearned_' + vocabMode;
+  const done = today[todayKey] || 0;
+  const pct  = Math.min(done / goalN * 100, 100);
+  $('goal-done').textContent        = done;
+  $('goal-total').textContent       = goalN;
+  $('goal-mode-label').textContent  = isSentences ? 'sentences' : 'words';
+  setTimeout(() => { $('goal-fill').style.width = pct + '%'; }, 200);
+
+  // CTA label + subtitle
+  $('cta-label').textContent = seen > 0 ? 'Continue learning' : 'Start learning';
+  const reviewReady = getVocabIndices().filter(i => { const d = getCard(i); return d.seen && d.heat < HEAT_MAX; }).length;
+  const unit = isSentences ? 'sentences' : 'words';
+  $('cta-sub').textContent = reviewReady > 0
+    ? reviewReady + ' ' + unit + ' to review'
+    : (total - seen) + ' new ' + unit + ' waiting';
+
+  // Mode pill position
+  requestAnimationFrame(updateModePill);
+}
+
+// ── Queue builder ─────────────────────────────────────
+function buildQueue() {
+  const newCards    = [];
+  const reviewCards = [];
+  const nNew = vocabMode === 'sentences' ? SESSION_SIZE : N_NEW;
+
+  for (const i of getVocabIndices()) {
+    const d = getCard(i);
+    if (!d.seen)               newCards.push(i);
+    else if (d.heat < HEAT_MAX) reviewCards.push(i);
+  }
+
+  // Prioritise review: low heat + most misses
+  reviewCards.sort((a, b) => {
+    const da = getCard(a), db = getCard(b);
+    return (da.heat * 100 - da.hits + da.misses) - (db.heat * 100 - db.hits + db.misses);
+  });
+
+  const picked = [
+    ...newCards.slice(0, nNew),
+    ...reviewCards.slice(0, SESSION_SIZE - Math.min(newCards.length, nNew)),
+  ];
+
+  // If still short, fill with more new cards
+  if (picked.length < SESSION_SIZE) {
+    picked.push(...newCards.slice(N_NEW, N_NEW + SESSION_SIZE - picked.length));
+  }
+
+  if (!picked.length) return [];   // all mastered edge case
+
+  // Keep new cards at front so user meets new words early, shuffle rest
+  const newPart    = picked.filter(i => !getCard(i).seen);
+  const reviewPart = shuffle(picked.filter(i => getCard(i).seen));
+  return [...newPart, ...reviewPart].map(i => ({ i, w: FOUNDATION[i] }));
+}
+
+// ── Navigation ────────────────────────────────────────
+function goHome() {
+  $('screen-study').hidden = true;
+  $('screen-done').hidden  = true;
+  $('screen-home').hidden  = false;
+  renderHome();
+}
+
+function startStudy() {
+  queue        = buildQueue();
+  cardIdx      = 0;
+  sessionStats = { got: 0, almost: 0, nope: 0, newLearned: 0 };
+  revealed     = false;
+
+  if (!queue.length) {
+    // Everything mastered — handle gracefully
+    alert('Amazing — you\'ve mastered everything! More words coming soon.');
+    return;
+  }
+
+  updateStreak();
+  $('screen-home').hidden  = true;
+  $('screen-done').hidden  = true;
+  $('screen-study').hidden = false;
+  renderCard();
+}
+
+// ── Card render ───────────────────────────────────────
+function renderCard() {
+  if (cardIdx >= queue.length) { endSession(); return; }
+
+  const { i, w } = queue[cardIdx];
+  const d = getCard(i);
+  revealed = false;
+
+  // Reset flip (no animation)
+  const inner = $('card-inner');
+  inner.classList.add('no-anim');
+  inner.classList.remove('flipped');
+  void inner.offsetWidth;
+  inner.classList.remove('no-anim');
+
+  // Controls
+  $('btn-show').style.display = '';
+  $('rate-row').classList.remove('on');
+  $('swipe-hint').style.display = '';
+
+  // Front content
+  const isLong = w.en.length > 14 || w.th.length > 14;
+  $('card-cat').textContent     = w.cat;
+  $('card-en').textContent      = w.en;
+  $('card-en').classList.toggle('long', isLong);
+  $('card-th').classList.toggle('long', isLong);
+  $('new-pill').style.display   = !d.seen ? '' : 'none';
+
+  // Heat dots
+  const hr = $('heat-row');
+  hr.innerHTML = '';
+  for (let k = 0; k < HEAT_MAX; k++) {
+    const dot = document.createElement('div');
+    dot.className = 'h-dot' + (k < d.heat ? ' on' : '');
+    hr.appendChild(dot);
+  }
+  const lbl = document.createElement('span');
+  lbl.className = 'h-text';
+  lbl.textContent = !d.seen      ? 'new word'
+    : d.heat >= HEAT_MAX         ? 'mastered!'
+    : d.heat === 0               ? 'needs work'
+    : d.heat + ' / ' + HEAT_MAX + ' strength';
+  hr.appendChild(lbl);
+
+  // Back content
+  $('back-en').textContent = w.en;
+  $('card-th').textContent = w.th;
+  const noteEl = $('card-note');
+  if (w.note) { noteEl.textContent = w.note; noteEl.style.display = ''; }
+  else        { noteEl.style.display = 'none'; }
+
+  // Session progress
+  $('sess-bar').style.width     = (cardIdx / queue.length * 100) + '%';
+  $('sess-counter').textContent = (cardIdx + 1) + ' / ' + queue.length;
+
+  // Card entrance animation
+  const wrap = $('card-wrap');
+  wrap.style.transition = 'none';
+  wrap.style.transform  = 'translateY(18px)';
+  wrap.style.opacity    = '0';
+  requestAnimationFrame(() => {
+    wrap.style.transition = 'opacity 0.28s ease, transform 0.32s cubic-bezier(0.34,1.2,0.64,1)';
+    wrap.style.transform  = '';
+    wrap.style.opacity    = '1';
+  });
+}
+
+// ── Reveal ────────────────────────────────────────────
+function revealCard() {
+  if (revealed) return;
+  revealed = true;
+  $('card-inner').classList.add('flipped');
+  $('btn-show').style.display = 'none';
+  $('rate-row').classList.add('on');
+  $('swipe-hint').style.display = 'none';
+}
+
+// ── Rating ────────────────────────────────────────────
+function rateCard(quality) {
+  if (!revealed) return;
+
+  const { i, w } = queue[cardIdx];
+  const d        = getCard(i);
+  const prevHeat = d.heat;
+
+  d.seen = true;
+
+  if (quality === 'got') {
+    d.heat = Math.min(d.heat + 1, HEAT_MAX);
+    d.hits++;
+    sessionStats.got++;
+    if (!prevHeat && !getCard(i).seen) sessionStats.newLearned++;
+  } else if (quality === 'almost') {
+    d.misses++;
+    sessionStats.almost++;
+    queue.splice(Math.min(cardIdx + 4, queue.length), 0, queue[cardIdx]);
+  } else {
+    d.heat = Math.max(d.heat - 1, 0);
+    d.misses++;
+    sessionStats.nope++;
+    queue.splice(Math.min(cardIdx + 2, queue.length), 0, queue[cardIdx]);
+  }
+
+  // Track new words learned
+  if (!prevHeat && d.seen && quality !== 'nope') {
+    sessionStats.newLearned++;
+  }
+
+  setCard(i, d);
+  saveSRS();
+
+  // Mastered?
+  if (quality === 'got' && d.heat >= HEAT_MAX && prevHeat < HEAT_MAX) {
+    showMastered(w, d);
+  }
+
+  dismissCard(quality === 'nope' ? 'left' : 'right');
+}
+
+// ── Dismiss card ──────────────────────────────────────
+function dismissCard(dir) {
+  const wrap = $('card-wrap');
+  wrap.style.transition = 'transform 0.22s ease-in, opacity 0.2s ease-in';
+  wrap.style.transform  = dir === 'left' ? 'translateX(-150%) rotate(-10deg)' : 'translateX(150%) rotate(10deg)';
+  wrap.style.opacity    = '0';
+  setTimeout(() => {
+    wrap.style.transition = 'none';
+    wrap.style.transform  = '';
+    wrap.style.opacity    = '';
+    cardIdx++;
+    renderCard();
+  }, 240);
+}
+
+// ── Session complete ──────────────────────────────────
+function endSession() {
+  sessionCount++;
+  localStorage.setItem(LS_SESSIONS, sessionCount);
+
+  // Update today's goal
+  const today = getTodayData();
+  const todayKey = 'newLearned_' + vocabMode;
+  today[todayKey] = (today[todayKey] || 0) + sessionStats.newLearned;
+  saveTodayData(today);
+
+  const total = sessionStats.got + sessionStats.almost + sessionStats.nope;
+  const mastered = countMastered();
+
+  $('done-emoji').textContent = sessionStats.got > sessionStats.nope ? '🎉' : '💪';
+  $('done-title').textContent = sessionStats.got >= total * 0.8 ? 'Great session!' : 'Keep going!';
+  $('done-sub').innerHTML     = `You studied <strong>${total}</strong> cards. ${mastered} words mastered total.`;
+  $('done-got').textContent   = sessionStats.got;
+  $('done-alm').textContent   = sessionStats.almost;
+  $('done-nope').textContent  = sessionStats.nope;
+
+  $('screen-study').hidden = true;
+  $('screen-done').hidden  = false;
+  if (sessionStats.got > 0) spawnParticles();
+}
+
+// ── Mastered celebration ──────────────────────────────
+function showMastered(w, d) {
+  const total = countMastered();
+  $('m-word').textContent  = w.th;
+  $('m-en').textContent    = w.en;
+  $('m-count').textContent = total + ' word' + (total !== 1 ? 's' : '') + ' mastered';
+
+  const ov = $('mastered-ov');
+  ov.classList.add('show');
+  spawnParticles();
+  setTimeout(() => ov.classList.remove('show'), 2800);
+}
+
+function spawnParticles() {
+  const colors = ['#e1203f','#f97316','#22c55e','#3b82f6','#a855f7','#fbbf24','#06b6d4'];
+  for (let k = 0; k < 28; k++) {
+    const p  = document.createElement('div');
+    p.className = 'pfx';
+    const sz = 5 + Math.random() * 9;
+    Object.assign(p.style, {
+      width:  sz + 'px',
+      height: sz + 'px',
+      left:   (25 + Math.random() * 50) + '%',
+      top:    (35 + Math.random() * 30) + '%',
+      background: colors[k % colors.length],
+      '--tx': (Math.random() - 0.5) * 300 + 'px',
+      '--ty': -(Math.random() * 240 + 60) + 'px',
+      '--dur': (0.55 + Math.random() * 0.55) + 's',
+      '--del': (Math.random() * 0.2) + 's',
+    });
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 1600);
+  }
+}
+
+// ── Swipe / drag ──────────────────────────────────────
+const stage = $('card-stage');
+stage.addEventListener('touchstart', onStart, { passive: true });
+stage.addEventListener('touchmove',  onMove,  { passive: true });
+stage.addEventListener('touchend',   onEnd);
+stage.addEventListener('mousedown',  onStart);
+window.addEventListener('mousemove', onMove);
+window.addEventListener('mouseup',   onEnd);
+
+function onStart(e) {
+  if (revealed) return;
+  const pt = e.touches ? e.touches[0] : e;
+  drag = { x0: pt.clientX, y0: pt.clientY, active: false };
+}
+function onMove(e) {
+  if (!drag) return;
+  const pt = e.touches ? e.touches[0] : e;
+  const dx = pt.clientX - drag.x0;
+  const dy = pt.clientY - drag.y0;
+  if (!drag.active && Math.abs(dx) > 10) drag.active = true;
+  if (!drag.active) return;
+
+  const inner = $('card-inner');
+  inner.style.transition = 'none';
+  inner.style.transform  = `translateX(${dx}px) translateY(${dy * 0.1}px) rotate(${dx * 0.055}deg)`;
+
+  const a  = Math.abs(dx);
+  const sL = $('sw-left'), sR = $('sw-right');
+  if      (dx < -14) { sL.style.opacity = Math.min((a - 14) / 65, 1); sR.style.opacity = 0; }
+  else if (dx >  14) { sR.style.opacity = Math.min((a - 14) / 65, 1); sL.style.opacity = 0; }
+  else               { sL.style.opacity = 0; sR.style.opacity = 0; }
+}
+function onEnd(e) {
+  if (!drag || !drag.active) { drag = null; return; }
+  const pt = e.changedTouches ? e.changedTouches[0] : e;
+  const dx = pt.clientX - drag.x0;
+  drag = null;
+  $('sw-left').style.opacity = 0;
+  $('sw-right').style.opacity = 0;
+
+  const inner = $('card-inner');
+  const THRESHOLD = 82;
+
+  if (dx > THRESHOLD) {
+    // Swipe right → fast "Got it" without reveal
+    inner.style.transition = 'transform 0.2s ease-in, opacity 0.2s';
+    inner.style.transform  = 'translateX(160%) rotate(10deg)';
+    inner.style.opacity    = '0';
+    const { i, w } = queue[cardIdx];
+    const d = getCard(i);
+    const prev = d.heat;
+    d.seen = true; d.heat = Math.min(d.heat + 1, HEAT_MAX); d.hits++;
+    if (!prev) sessionStats.newLearned++;
+    sessionStats.got++;
+    setCard(i, d); saveSRS();
+    if (d.heat >= HEAT_MAX && prev < HEAT_MAX) showMastered(w, d);
+    setTimeout(() => {
+      inner.style.transition = 'none';
+      inner.style.transform  = '';
+      inner.style.opacity    = '';
+      cardIdx++;
+      renderCard();
+    }, 240);
+
+  } else if (dx < -THRESHOLD) {
+    // Swipe left → reveal card
+    inner.style.transition = 'transform 0.28s cubic-bezier(0.34,1.2,0.64,1)';
+    inner.style.transform  = '';
+    setTimeout(() => { inner.style.transition = ''; revealCard(); }, 200);
+
+  } else {
+    // Snap back
+    inner.style.transition = 'transform 0.36s cubic-bezier(0.34,1.4,0.64,1)';
+    inner.style.transform  = '';
+    setTimeout(() => { inner.style.transition = ''; }, 380);
+  }
+}
+
+// ── Keyboard ──────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (!$('screen-study').hidden) {
+    if ((e.key === ' ' || e.key === 'Enter') && !revealed) { e.preventDefault(); revealCard(); }
+    else if (revealed) {
+      if (e.key === 'ArrowRight') rateCard('got');
+      if (e.key === 'ArrowLeft')  rateCard('nope');
+      if (e.key === 'ArrowUp')    rateCard('almost');
+    }
+  }
+});
+
+// ── Boot ──────────────────────────────────────────────
+goHome();
+</script>
+</body>
+</html>
