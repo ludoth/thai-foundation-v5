@@ -61,7 +61,7 @@
     /* ── HOME ────────────────────────────────── */
     #screen-home {
       background:
-        radial-gradient(ellipse 80% 50% at 50% 20%, rgba(225,32,63,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 80% 50% at 50% 20%, rgba(225,32,63,0.13) 0%, transparent 60%),
         var(--bg);
     }
     @keyframes fade-up {
@@ -176,7 +176,7 @@
     .goal-fill  { height: 100%; background: linear-gradient(90deg, var(--rose), var(--rose-hi)); border-radius: 0 3px 3px 0; transition: width 1s cubic-bezier(0.4,0,0.2,1); box-shadow: 0 0 8px rgba(225,32,63,0.35); }
 
     /* CTA */
-    .home-cta { margin: 0 20px; animation: fade-up 0.4s 0.2s ease both; }
+    .home-cta { margin: 0 20px; animation: fade-up 0.4s 0.2s ease both; padding-bottom: max(32px, env(safe-area-inset-bottom, 32px)); }
     .btn-cta {
       width: 100%; padding: 17px 20px;
       background: var(--rose); color: #fff;
@@ -201,7 +201,7 @@
     /* ── STUDY ───────────────────────────────── */
     #screen-study {
       background:
-        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(225,32,63,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(225,32,63,0.06) 0%, transparent 55%),
         var(--bg);
     }
     .study-nav {
@@ -220,6 +220,7 @@
     .sess-bar-wrap { flex: 1; height: 4px; background: var(--surface-up); border-radius: 99px; overflow: hidden; }
     .sess-bar-fill { height: 100%; background: var(--rose); border-radius: 99px; transition: width 0.4s ease; }
     .sess-counter  { font-size: 0.64rem; font-weight: 800; color: var(--text-mid); white-space: nowrap; }
+    .streak-run    { font-size: 0.7rem; font-weight: 800; color: var(--streak); white-space: nowrap; line-height: 1; display: flex; align-items: center; gap: 2px; }
 
     /* Card stage */
     .card-stage {
@@ -294,8 +295,9 @@
     }
     .card-en.long { font-size: clamp(1.1rem, 4.5vw, 1.6rem); line-height: 1.3; letter-spacing: -0.005em; }
     .heat-row { display: flex; align-items: center; justify-content: center; gap: 5px; padding-top: 12px; }
-    .h-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--card-border); transition: background 0.3s; }
+    .h-dot { width: 11px; height: 11px; border-radius: 50%; background: var(--card-border); transition: background 0.3s, box-shadow 0.3s; }
     .h-dot.on { background: var(--rose); }
+    .heat-row.mastered .h-dot.on { box-shadow: 0 0 6px 2px rgba(225,32,63,0.55); }
     .h-text { font-size: 0.52rem; font-weight: 700; color: var(--card-dim); text-transform: uppercase; letter-spacing: 0.06em; margin-left: 5px; }
 
     /* Card back */
@@ -332,10 +334,10 @@
       text-align: center; margin-bottom: 8px;
       display: flex; align-items: center; justify-content: center; gap: 7px;
     }
-    .sh { font-size: 0.56rem; font-weight: 700; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
-    .sh-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-dim); }
-    .sh-l { color: rgba(239,68,68,0.4); }
-    .sh-r { color: rgba(15,149,128,0.4); }
+    .sh { font-size: 0.56rem; font-weight: 700; color: var(--text-mid); text-transform: uppercase; letter-spacing: 0.06em; }
+    .sh-sep { width: 3px; height: 3px; border-radius: 50%; background: var(--text-mid); }
+    .sh-l { color: rgba(239,68,68,0.6); }
+    .sh-r { color: rgba(15,149,128,0.6); }
 
     .btn-show {
       width: 100%; padding: 17px;
@@ -350,20 +352,24 @@
     .btn-show:hover { background: var(--rose-hi); }
     .btn-show:active { transform: scale(0.98); }
 
-    .rate-row { display: none; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+    .rate-row { display: none; grid-template-columns: 1fr 1fr 1.6fr; gap: 8px; }
     .rate-row.on { display: grid; }
     .btn-rate {
-      padding: 13px 6px; border: none; border-radius: 14px;
+      padding: 13px 6px; border: 1px solid transparent; border-radius: 14px;
       cursor: pointer; font-family: 'Sarabun', sans-serif;
       font-size: 0.74rem; font-weight: 800;
       display: flex; flex-direction: column; align-items: center; gap: 4px;
-      transition: transform 0.1s;
+      transition: transform 0.1s, box-shadow 0.15s;
     }
     .btn-rate:active { transform: scale(0.94); }
     .btn-rate .icon { font-size: 1rem; }
-    .r-nope   { background: #fef2f2; color: #dc2626; }
-    .r-almost { background: #eff6ff; color: #2563eb; }
-    .r-got    { background: #f0fdf4; color: #16a34a; }
+    .r-nope   { background: var(--surface-up); color: #ef4444; border-color: var(--border); }
+    .r-nope:hover { background: rgba(239,68,68,0.08); }
+    .r-almost { background: var(--surface-up); color: var(--text-mid); border-color: var(--border); }
+    .r-almost:hover { background: rgba(122,133,154,0.12); }
+    .r-got    { background: var(--rose); color: #fff; box-shadow: 0 4px 16px rgba(225,32,63,0.32); }
+    .r-got:hover { background: var(--rose-hi); }
+    .r-got:active { box-shadow: 0 2px 8px rgba(225,32,63,0.2); }
 
     /* ── DONE ────────────────────────────────── */
     #screen-done {
@@ -387,8 +393,8 @@
     }
     .done-n { font-size: 1.8rem; font-weight: 800; color: var(--text); line-height: 1; display: block; }
     .done-l { font-size: 0.5rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); font-weight: 700; display: block; margin-top: 4px; }
-    .done-got-n   { color: #16a34a; }
-    .done-nope-n  { color: #dc2626; }
+    .done-got-n   { color: var(--rose); }
+    .done-nope-n  { color: #ef4444; }
     .btn-done {
       width: 100%; padding: 18px;
       background: var(--rose); color: #fff;
@@ -526,6 +532,7 @@
         <div class="sess-bar-fill" id="sess-bar" style="width:0%"></div>
       </div>
       <div class="sess-counter" id="sess-counter">1 / 12</div>
+      <div class="streak-run" id="streak-run" style="display:none">🔥<span id="streak-run-n">2</span></div>
     </div>
 
     <div class="card-stage" id="card-stage">
@@ -711,6 +718,7 @@ let queue    = [];
 let cardIdx  = 0;
 let revealed = false;
 let sessionStats = { got: 0, almost: 0, nope: 0, newLearned: 0 };
+let consecutiveCorrect = 0;
 let drag     = null;
 
 // ── Helpers ───────────────────────────────────────────
@@ -837,7 +845,9 @@ function startStudy() {
   queue        = buildQueue();
   cardIdx      = 0;
   sessionStats = { got: 0, almost: 0, nope: 0, newLearned: 0 };
+  consecutiveCorrect = 0;
   revealed     = false;
+  const sr = $('streak-run'); if (sr) sr.style.display = 'none';
 
   if (!queue.length) {
     // Everything mastered — handle gracefully
@@ -883,6 +893,7 @@ function renderCard() {
   // Heat dots
   const hr = $('heat-row');
   hr.innerHTML = '';
+  hr.classList.toggle('mastered', d.heat >= HEAT_MAX);
   for (let k = 0; k < HEAT_MAX; k++) {
     const dot = document.createElement('div');
     dot.className = 'h-dot' + (k < d.heat ? ' on' : '');
@@ -944,15 +955,28 @@ function rateCard(quality) {
     d.hits++;
     sessionStats.got++;
     if (!prevHeat && !getCard(i).seen) sessionStats.newLearned++;
+    consecutiveCorrect++;
   } else if (quality === 'almost') {
     d.misses++;
     sessionStats.almost++;
     queue.splice(Math.min(cardIdx + 4, queue.length), 0, queue[cardIdx]);
+    consecutiveCorrect = 0;
   } else {
     d.heat = Math.max(d.heat - 1, 0);
     d.misses++;
     sessionStats.nope++;
     queue.splice(Math.min(cardIdx + 2, queue.length), 0, queue[cardIdx]);
+    consecutiveCorrect = 0;
+  }
+  // Update in-session streak indicator
+  const sr = $('streak-run');
+  if (sr) {
+    if (consecutiveCorrect >= 2) {
+      $('streak-run-n').textContent = consecutiveCorrect;
+      sr.style.display = 'flex';
+    } else {
+      sr.style.display = 'none';
+    }
   }
 
   // Track new words learned
